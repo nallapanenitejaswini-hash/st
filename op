@@ -1,0 +1,97 @@
+## Java Program to Connect to a Database Using JDBC and Insert Values
+
+Aim: To write a Java program to connect to a MySQL database using JDBC and insert values into a table.
+
+### 1. SQL Commands
+
+First, create a database and a table in MySQL.
+
+```
+CREATE DATABASE college;
+
+USE college;
+
+CREATE TABLE student (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    marks INT
+);
+```
+
+### 2. Java Program
+
+```
+
+import java.sql.*;
+
+public class JDBCInsert {
+    public static void main(String[] args) {
+        try {
+            // Load JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Connect to database
+            Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/college",
+                "root",
+                "password"
+            );
+
+            // Insert values into table
+            String query = "INSERT INTO student VALUES (?, ?, ?)";
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setInt(1, 101);
+            ps.setString(2, "Ravi");
+            ps.setInt(3, 85);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Record inserted successfully!");
+            }
+
+            // Close resources
+            ps.close();
+            con.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+
+```
+
+### 3. Output
+
+```
+Record inserted successfully!
+```
+
+### 4. Verify the Inserted Record
+
+Execute this SQL command in MySQL:
+
+```
+SELECT * FROM student;
+```
+
+Expected result:
+
+| id  | name | marks |
+| --- | ---- | ----- |
+| 101 | Ravi | 85    |
+
+### 5. Explanation
+
+1. `Class.forName()` loads the MySQL JDBC driver.
+2. `DriverManager.getConnection()` connects to the database.
+3. `PreparedStatement` prepares the SQL insert query.
+4. `setInt()` and `setString()` assign values to the query parameters.
+5. `executeUpdate()` inserts the record into the table.
+6. `close()` closes the database resources.
+
+Result: The Java program connects to the MySQL database using JDBC and inserts a student record successfully.
+
+Note: Replace `"password"` with your actual MySQL password and add the MySQL Connector/J driver to your project.
